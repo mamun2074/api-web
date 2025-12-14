@@ -5,15 +5,10 @@ import {
     CCardHeader,
     CCol,
     CRow,
-    CTable,
-    CAccordion,
-    CAccordionBody,
-    CAccordionHeader,
-    CAccordionItem,
+    CTable
 } from '@coreui/react'
-import { DocsComponents, DocsExample } from 'src/components'
 
-const Accordion = () => {
+const User = () => {
 
     const columns = [
         {
@@ -64,11 +59,9 @@ const Accordion = () => {
         <CRow>
             <CCol xs={12}>
                 <CCard className="mb-4">
-                    <CCardHeader>
-                        <strong>React Accordion</strong> <small>Flush</small>
-                    </CCardHeader>
                     <CCardBody>
-                        <CTable columns={columns} items={items} />
+                        <CTable bordered={true} columns={columns} items={items} />
+
                     </CCardBody>
                 </CCard>
             </CCol>
@@ -76,4 +69,4 @@ const Accordion = () => {
     )
 }
 
-export default Accordion
+export default User
