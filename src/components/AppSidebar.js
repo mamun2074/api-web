@@ -2,6 +2,11 @@ import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 
 import {
+  setSidebarShow
+} from '../store/uiSlice'
+
+
+import {
     CCloseButton,
     CSidebar,
     CSidebarBrand,
@@ -22,7 +27,7 @@ import navigation from '../_nav'
 const AppSidebar = () => {
     const dispatch = useDispatch()
     const unfoldable = useSelector((state) => state.sidebarUnfoldable)
-    const sidebarShow = useSelector((state) => state.sidebarShow)
+    const sidebarShow = useSelector((state) => state.ui.sidebarShow)
 
     return (
         <CSidebar
@@ -32,7 +37,7 @@ const AppSidebar = () => {
             unfoldable={unfoldable}
             visible={sidebarShow}
             onVisibleChange={(visible) => {
-                dispatch({ type: 'set', sidebarShow: visible })
+                dispatch(setSidebarShow(visible))
             }}
         >
 
