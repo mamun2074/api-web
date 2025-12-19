@@ -1,11 +1,12 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { loginSchema } from '../features/utils/authutl'
 import { useDispatch, useSelector } from 'react-redux'
-
 import { loginUser } from '../store/authService'
+
+import { resetLoginLogoutState } from '../store/authSlice'
 
 import {
     CButton,
@@ -22,13 +23,14 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilLockLocked, cilUser } from '@coreui/icons'
+import { useNavigate } from 'react-router-dom'
+
 
 
 const Login = () => {
-
-
+    const navigate = useNavigate()
     const dispatch = useDispatch()
-    const { loading, error } = useSelector(state => state.auth)
+    const { loading, error, isLogingSuccess } = useSelector(state => state.auth)
 
     const {
         register,
@@ -39,9 +41,16 @@ const Login = () => {
     })
 
     const onSubmit = (data) => {
-        console.log(data);
         dispatch(loginUser(data))
     }
+
+    useEffect(() => {
+        if (isLogingSuccess) {
+            navigate('/dashboard', { replace: true })
+            dispatch(resetLoginLogoutState())
+        }
+    }, [navigate, isLogingSuccess, dispatch])
+
 
     return (
         <div className="bg-body-tertiary min-vh-100 d-flex flex-row align-items-center">
@@ -54,18 +63,18 @@ const Login = () => {
                                     <CForm onSubmit={handleSubmit(onSubmit)}>
                                         <h1>Login</h1>
                                         <p className="text-body-secondary">Sign In to your account</p>
-                                        <CInputGroup className={`${errors.username ? 'border border-danger rounded' : ''} `}>
+                                        <CInputGroup className={`${errors.email ? 'border border-danger rounded' : ''} `}>
                                             <CInputGroupText>
                                                 <CIcon icon={cilUser} />
                                             </CInputGroupText>
                                             <CFormInput
                                                 placeholder="Username"
-                                                autoComplete="username"
-                                                {...register('username')}
+                                                autoComplete="email"
+                                                {...register('email')}
                                             />
                                         </CInputGroup>
                                         <div className='mb-3'>
-                                            {errors.username && <small className='text-danger'>{errors.username.message}</small>}
+                                            {errors.email && <small className='text-danger'>{errors.email.message}</small>}
                                         </div>
                                         <CInputGroup className={`${errors.password ? 'border border-danger rounded' : ''} `}>
                                             <CInputGroupText>
@@ -80,6 +89,7 @@ const Login = () => {
                                         </CInputGroup>
                                         <div className='mb-4'>
                                             {errors.password && <small className='text-danger'>{errors.password.message}</small>}
+                                            {error != null && <small className='text-danger'>{error.message}</small>}
                                         </div>
                                         <CRow>
                                             <CCol xs={6}>
@@ -97,9 +107,6 @@ const Login = () => {
                                                 </CButton>
                                             </CCol>
                                         </CRow>
-                                        {errors && (
-                                            <div className="text-danger mt-2">{error}</div>
-                                        )}
                                     </CForm>
                                 </CCardBody>
                             </CCard>

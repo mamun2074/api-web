@@ -1,4 +1,8 @@
-import React from 'react'
+
+import React, { useEffect } from 'react'
+
+import { resetLoginLogoutState } from '../../views/admin/auth/store/authSlice'
+
 import {
     CAvatar,
     CBadge,
@@ -25,7 +29,30 @@ import CIcon from '@coreui/icons-react'
 
 import avatar8 from './../../assets/images/avatars/8.jpg'
 
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom'
+
+import { logout } from '../../../src/views/admin/auth/store/authService'
+
+
 const AppHeaderDropdown = () => {
+
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const { isLogoutSuccess } = useSelector(state => state.auth)
+
+    const handleLogout = () => {
+        dispatch(logout())
+    }
+
+    useEffect(() => {
+        if (isLogoutSuccess) {
+            navigate('/login', { replace: true })
+            dispatch(resetLoginLogoutState())
+        }
+    }, [navigate, isLogoutSuccess, dispatch])
+
+
     return (
         <CDropdown variant="nav-item">
             <CDropdownToggle placement="bottom-end" className="py-0 pe-0" caret={false}>
@@ -42,7 +69,7 @@ const AppHeaderDropdown = () => {
                     Settings
                 </CDropdownItem>
                 <CDropdownDivider />
-                <CDropdownItem className='text-danger' href="#">
+                <CDropdownItem onClick={handleLogout} className='text-danger' href="#">
                     <CIcon icon={cilAccountLogout} className="me-2 text-black" />
                     Log out
                 </CDropdownItem>
